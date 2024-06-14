@@ -3,28 +3,33 @@ import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const { setIsAuthenticated, setUser } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch('/api/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ email, password })
-    });
-    const data = await response.json();
-    if (data.success) {
-      localStorage.setItem('token', data.token);
-      setIsAuthenticated(true);
-      setUser(data.user);
-      navigate('/');
-    } else {
-      console.error(data.error);
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ username, password })
+      });
+      const data = await response.json();
+      if (data.success) {
+        localStorage.setItem('token', data.token);
+        setIsAuthenticated(true);
+        setUser(data.user);
+        navigate('/');
+      } else {
+        setError(data.error || 'Login failed');
+      }
+    } catch (error) {
+      setError('An error occurred. Please try again.');
     }
   };
 
@@ -33,11 +38,11 @@ const Login = () => {
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
         <div>
-          <label>Email: </label>
+          <label>Username: </label>
           <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
         </div>
         <div>
@@ -48,6 +53,7 @@ const Login = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
         <button type="submit">Login</button>
       </form>
     </div>

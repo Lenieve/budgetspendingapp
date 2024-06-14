@@ -2,9 +2,9 @@ const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 
 exports.register = async (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, password } = req.body;
   try {
-    const user = await User.create({ username, email, password });
+    const user = await User.create({ username, password });
     res.status(201).json({
       success: true,
       data: user
@@ -15,11 +15,11 @@ exports.register = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
-  const { email, password } = req.body;
+  const { username, password } = req.body;
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ username });
     if (!user || !user.matchPassword(password)) {
-      return res.status(401).json({ success: false, error: 'Invalid email or password' });
+      return res.status(401).json({ success: false, error: 'Invalid username or password' });
     }
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
@@ -41,4 +41,8 @@ exports.validateToken = async (req, res) => {
   } catch (error) {
     res.status(401).json({ success: false, error: 'Invalid token' });
   }
+};
+
+exports.logout = (req, res) => {
+  res.send('Logout function not yet implemented.');
 };
