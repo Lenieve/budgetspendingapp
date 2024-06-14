@@ -22,6 +22,11 @@ const SpendingSchema = new mongoose.Schema({
   balance: {
     type: Number,
     required: true
+  },
+  flag: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Flag',
+    required: false
   }
 });
 

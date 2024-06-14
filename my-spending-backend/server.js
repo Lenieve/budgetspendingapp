@@ -5,12 +5,13 @@ const dotenv = require('dotenv');
 const authRoutes = require('./routes/authRoutes');
 const spendingRoutes = require('./routes/spendingRoutes');
 const fixedExpenseRoutes = require('./routes/fixedExpenseRoutes');
+const flagRoutes = require('./routes/flagRoutes');
 const userRoutes = require('./routes/userRoutes');
 
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 4300;
+const PORT = process.env.PORT || 4200;
 
 app.use(bodyParser.json());
 
@@ -33,6 +34,7 @@ mongoose.connect(mongoUri, {
 app.use('/api/auth', authRoutes);
 app.use('/api/spending', spendingRoutes);
 app.use('/api/fixedexpense', fixedExpenseRoutes);
+app.use('/api/flag', flagRoutes);
 app.use('/api/user', userRoutes);
 
 app.listen(PORT, () => {
