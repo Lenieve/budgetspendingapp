@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
+const cors = require('cors'); // Import CORS middleware
 const authRoutes = require('./routes/authRoutes');
 const spendingRoutes = require('./routes/spendingRoutes');
 const fixedExpenseRoutes = require('./routes/fixedExpenseRoutes');
@@ -14,6 +15,7 @@ const app = express();
 const PORT = process.env.PORT || 4200;
 
 app.use(bodyParser.json());
+app.use(cors()); // Enable CORS for all routes
 
 // Connect to MongoDB
 const mongoUri = process.env.MONGODB_URI;
